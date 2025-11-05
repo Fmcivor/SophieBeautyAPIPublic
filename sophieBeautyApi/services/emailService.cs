@@ -44,15 +44,15 @@ namespace sophieBeautyApi.services
             string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
 
-            htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-            htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
-            htmlBody.Replace("{{start_datetime}}", formattedDate);
-            htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
-            htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
-            htmlBody.Replace("{{payment_method}}", "Cash");
-            htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
+            htmlBody=htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+            htmlBody=htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
+            htmlBody=htmlBody.Replace("{{start_datetime}}", formattedDate);
+            htmlBody=htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+            htmlBody=htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+            htmlBody=htmlBody.Replace("{{payment_method}}", "Cash");
+            htmlBody=htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-message.Body = htmlBody
+message.Body = htmlBody;
 
             await client.SendMailAsync(message);
 
