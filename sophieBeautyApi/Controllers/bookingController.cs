@@ -16,13 +16,16 @@ namespace sophieBeautyApi.Controllers
         private readonly bookingService _bookingService;
         private readonly treatmentService _treatmentService;
 
+        private readonly emailService _emailService;
+
         private readonly availablilitySlotService _availablilitySlotService;
 
-        public bookingController(bookingService bookingService, treatmentService treatmentService, availablilitySlotService availablilitySlotService)
+        public bookingController(bookingService bookingService, treatmentService treatmentService, availablilitySlotService availablilitySlotService, emailService emailService)
         {
             this._bookingService = bookingService;
             this._treatmentService = treatmentService;
             this._availablilitySlotService = availablilitySlotService;
+            this._emailService = emailService;
         }
 
 
@@ -62,7 +65,7 @@ namespace sophieBeautyApi.Controllers
                 paid = true;
             }
 
-            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate,newBooking.email, treatment.name, (int)treatment.price, treatment.duration ,newBooking.payByCard, paid, booking.status.Confirmed);
+            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatment.name, (int)treatment.price, treatment.duration, newBooking.payByCard, paid, booking.status.Confirmed);
 
             var existingBooking = await _bookingService.bookingOnDate(booking.appointmentDate);
 
@@ -80,9 +83,17 @@ namespace sophieBeautyApi.Controllers
 
             booking = await _bookingService.create(booking);
 
+            // Null check
+            if (booking == null)
+            {
+                return StatusCode(500, "An error occurred while creating the booking.");
+            }
+
             var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
 
             booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
+
+            _emailService.send(booking);
 
             return CreatedAtAction(nameof(create), booking);
         }
@@ -105,7 +116,7 @@ namespace sophieBeautyApi.Controllers
                 paid = true;
             }
 
-            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate,newBooking.email, treatment.name, (int)treatment.price, treatment.duration ,newBooking.payByCard, paid, booking.status.Confirmed);
+            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatment.name, (int)treatment.price, treatment.duration, newBooking.payByCard, paid, booking.status.Confirmed);
 
             var existingBooking = await _bookingService.bookingOnDate(booking.appointmentDate);
 
@@ -124,7 +135,7 @@ namespace sophieBeautyApi.Controllers
         }
 
 
-        
+
         [Authorize]
         [HttpPut("Update")]
         public async Task<ActionResult> update([FromBody] booking updatedbooking)

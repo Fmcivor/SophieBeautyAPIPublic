@@ -39,6 +39,7 @@ using Microsoft.Extensions.Configuration;
     builder.Services.AddScoped<jwtTokenHandler>();
     builder.Services.AddScoped<adminService>();
     builder.Services.AddScoped<categoryService>();
+    builder.Services.AddScoped<emailService>();
 
     // JWT Authentication
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
