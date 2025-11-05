@@ -52,7 +52,9 @@ namespace sophieBeautyApi.services
             htmlBody.Replace("{{payment_method}}", "Cash");
             htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-            client.SendMailAsync(message);
+message.Body = htmlBody
+
+            await client.SendMailAsync(message);
 
 
         }
