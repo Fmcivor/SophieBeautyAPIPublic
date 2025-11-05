@@ -33,26 +33,26 @@ namespace sophieBeautyApi.services
             message.To.Add(newBooking.email);
             message.From = new MailAddress(_config["emailUsername"]);
             message.Subject = "Booking Confirmation";
-            message.IsBodyHtml = true;
+            message.IsBodyHtml = false;
 
-            var filePath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "BookingConfirmation.html");
-            string htmlBody = File.ReadAllText(filePath);
-            message.Body = htmlBody;
+            //var filePath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "BookingConfirmation.html");
+            //string htmlBody = File.ReadAllText(filePath);
+            //message.Body = htmlBody;
 
             var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
             var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
             string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
 
-            htmlBody=htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-            htmlBody=htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
-            htmlBody=htmlBody.Replace("{{start_datetime}}", formattedDate);
-            htmlBody=htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
-            htmlBody=htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
-            htmlBody=htmlBody.Replace("{{payment_method}}", "Cash");
-            htmlBody=htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
+            //htmlBody=htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+            //htmlBody=htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
+            //htmlBody=htmlBody.Replace("{{start_datetime}}", formattedDate);
+            //htmlBody=htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+            //htmlBody=htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+            //htmlBody=htmlBody.Replace("{{payment_method}}", "Cash");
+            //htmlBody=htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-message.Body = htmlBody;
+message.Body = "hello";
 
             await client.SendMailAsync(message);
 
