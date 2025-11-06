@@ -19,7 +19,7 @@ using Microsoft.Extensions.Configuration;
     // Azure Key Vault
     builder.Configuration.AddAzureKeyVault(
         new Uri("https://sophiebeautykeys.vault.azure.net/"),
-        new ManagedIdentityCredential()
+        new InteractiveBrowserCredential()
     );
 
     // Add services

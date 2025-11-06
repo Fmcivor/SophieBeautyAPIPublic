@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +5,6 @@
   <meta name="viewport" content="width=device-width">
   <title>Booking Confirmation — Beauty by Sophieee</title>
   <style>
-    /* General styles — keep minimal for email client compatibility */
     body,table,td,a{ -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
     table,td{ mso-table-lspace:0pt; mso-table-rspace:0pt; }
     img{ -ms-interpolation-mode:bicubic; }
@@ -14,40 +12,26 @@
     table{ border-collapse:collapse !important; }
     body{ margin:0; padding:0; width:100% !important; height:100% !important; background-color:#fffaf8; font-family: Arial, Helvetica, sans-serif; color:#2b2b2b; }
 
-    /* Container */
     .email-wrapper{ width:100%; background-color:#fffaf8; padding:24px 0; }
     .email-content{ max-width:680px; margin:0 auto; }
 
-    /* Card */
     .card{ background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(43,43,43,0.06); }
 
-    /* Header */
     .brand{ padding:20px; display:flex; align-items:center; gap:12px; }
     .logo{ width:56px; height:56px; border-radius:10px; display:inline-block; text-align:center; line-height:56px; font-weight:700; font-family: 'Georgia', serif; color:#b56b9b; background: #fff2f9; }
-    .brand-title{ font-size:18px; margin:0; padding:0; }
-    .brand-sub{ font-size:13px; color:#6b6b6b; margin:0; padding:0; }
 
-    /* Body */
     .content-body{ padding:20px; }
     h1{ font-size:20px; margin:0 0 8px 0; color:#2b2b2b; font-family: 'Georgia', serif; }
     p.lead{ margin:0 0 16px 0; color:#6b6b6b; font-size:14px; }
 
-    /* Details table */
     .details{ width:100%; border-radius:8px; border:1px solid rgba(181,107,155,0.07); background: linear-gradient(180deg, rgba(181,107,155,0.02), transparent); padding:12px; }
-    .detail-row{ padding:10px 0; border-bottom:1px dashed rgba(43,43,43,0.04); font-size:14px; }
+    .detail-row{ padding:10px 0; border-bottom:1px dashed rgba(43,43,43,0.04); font-size:14px; display:block; }
     .detail-row:last-child{ border-bottom:none; }
-    .label{ color:#6b6b6b; font-size:13px; }
-    .value{ font-weight:700; color:#2b2b2b; font-size:14px; margin-top:4px; display:block; }
+    .label{ color:#6b6b6b; font-size:13px; margin-top:6px; }
+    .value{ font-weight:700; color:#2b2b2b; font-size:14px; margin-top:2px; }
 
-    /* Buttons */
-    .btn{ display:inline-block; text-decoration:none; padding:11px 18px; border-radius:8px; font-weight:700; font-size:14px; }
-    .btn-primary{ background:#b56b9b; color:#ffffff; }
-    .btn-ghost{ background:transparent; color:#2b2b2b; border:1px solid rgba(43,43,43,0.08); }
-
-    /* Footer */
     .footer{ padding:16px 20px; font-size:13px; color:#6b6b6b; text-align:center; }
 
-    /* Mobile */
     @media screen and (max-width:520px) {
       .brand{ padding:16px; }
       .logo{ width:48px; height:48px; line-height:48px; font-size:18px; }
@@ -58,18 +42,17 @@
 <body>
   <center class="email-wrapper">
     <div class="email-content" role="article" aria-roledescription="email">
-      <!-- Card -->
+
       <table class="card" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
         <tr>
           <td>
-            <!-- Header -->
+
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
               <tr>
                 <td style="padding:18px 20px;">
                   <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
                     <tr>
-                      <td valign="middle" style="vertical-align:middle;">
-                        <!-- Logo: replace src with your hosted logo URL -->
+                      <td valign="middle">
                         <div style="display:flex;align-items:center;gap:12px;">
                           <div class="logo" aria-hidden="true" style="font-family:'Playfair Display',serif;">SB</div>
                           <div>
@@ -78,7 +61,7 @@
                           </div>
                         </div>
                       </td>
-                      <td align="right" style="vertical-align:middle;">
+                      <td align="right">
                         <a href="https://beautybysophieee.netlify.app/" style="font-size:13px;color:#6b6b6b;text-decoration:none;">Visit website</a>
                       </td>
                     </tr>
@@ -87,73 +70,42 @@
               </tr>
             </table>
 
-            <!-- Body -->
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
               <tr>
                 <td class="content-body">
                   <h1>Booking confirmed — thank you, {{customer_name}}!</h1>
                   <p class="lead">We’ve reserved your appointment. A confirmation email has been sent to <strong>{{customer_email}}</strong>. If you need to change or cancel, please reply to this email or <a href="{{contact_url}}" style="color:#b56b9b;text-decoration:none;">contact us</a>.</p>
 
-                  <!-- Details block -->
                   <div class="details" style="margin-bottom:16px;">
-                    <!-- Row: Client & Reference -->
-                    <div class="detail-row" style="display:flex;justify-content:space-between;align-items:flex-start;">
-                      <div style="max-width:60%;">
-                        <div class="label">Client</div>
-                        <div class="value">{{customer_name}} </div>
-                      </div>
-                      <div style="text-align:right;">
-                        <div class="label">Price</div>
-                        <div class="value">{{price}}</div>
-                      </div>
+
+                    <div class="detail-row">
+                      <div class="label">Client</div>
+                      <div class="value">{{customer_name}}</div>
+                      <div class="label">Price</div>
+                      <div class="value">{{price}}</div>
                     </div>
 
-                    <!-- Row: Service & Price -->
-                    <div class="detail-row" style="display:flex;justify-content:space-between;align-items:flex-start;">
-                      <div>
-                        <div class="label">Service</div>
-                        <div class="value">{{service_name}}</div>
-                      </div>
-                      <div style="text-align:right;">
-                        <div class="label">Duration</div>
-                        <div class="value">{{duration}}</div>
-                      </div>
+                    <div class="detail-row">
+                      <div class="label">Service</div>
+                      <div class="value">{{service_name}}</div>
+                      <div class="label">Duration</div>
+                      <div class="value">{{duration}}</div>
                     </div>
 
-                    <!-- Row: Date & Duration -->
-                    <div class="detail-row" style="display:flex;justify-content:space-between;align-items:flex-start; margin-bottom:20px">
-                      <div>
-                        <div class="label">Date & time</div>
-                        <div class="value">{{start_datetime}}</div>
-                      </div>
-                      <div style="text-align:right;">
-                        <div class="label">Payment</div>
-                        <div class="value">{{payment_method}}</div>
-                      </div>
-                      
+                    <div class="detail-row" style="margin-bottom:20px;">
+                      <div class="label">Date & time</div>
+                      <div class="value">{{start_datetime}}</div>
+                      <div class="label">Payment</div>
+                      <div class="value">{{payment_method}}</div>
                     </div>
 
+                  </div>
 
-                  <!-- Actions -->
-                  <table cellpadding="0" cellspacing="0" role="presentation" style="width:100%; margin-bottom:8px;">
-                    <tr>
-                      <td style="padding-bottom:10px;">
-                        <!-- Primary CTA: view booking -->
-                        <a href="{{view_booking_url}}" class="btn btn-primary" style="display:inline-block;">View booking details</a>
-                        &nbsp;
-                        <!-- Add to calendar as web link (ICS link or route on your server) -->
-                        <a href="{{add_to_calendar_url}}" class="btn btn-ghost" style="display:inline-block; margin-left:8px;">Add to calendar</a>
-                      </td>
-                    </tr>
-                  </table>
-
-                  <!-- Small note -->
-                  <p style="margin:0;color:#6b6b6b;font-size:13px;">Please arrive 5 minutes early. Please bring cash, as we currently do not offer card payments </p>
+                  <p style="margin:0;color:#6b6b6b;font-size:13px;">Please arrive 5 minutes early. Please bring cash, as we currently do not offer card payments.</p>
                 </td>
               </tr>
             </table>
 
-            <!-- Footer / Contact -->
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#fff7f5;">
               <tr>
                 <td style="padding:16px 20px;">
@@ -163,12 +115,10 @@
                         <div style="font-size:14px;font-weight:700;color:#2b2b2b;">Beauty by Sophieee</div>
                         <div style="font-size:13px;color:#6b6b6b;">10 Greystone Rd, Limavady BT49 0EQ</div>
                         <div style="font-size:13px;color:#6b6b6b; margin-top:8px;">
-                         
                           &nbsp; • &nbsp;
                           Instagram: <a href="https://www.instagram.com/beautybysophieee" style="color:#6b6b6b;text-decoration:none;">@beautybysophieee</a>
                         </div>
                       </td>
-                      
                     </tr>
                   </table>
                 </td>
@@ -179,10 +129,9 @@
         </tr>
       </table>
 
-      <!-- Legal / Unsubscribe -->
       <div class="footer">
-        If you didn’t make this booking or need help, please <a href="mailto:" style="color:#b56b9b;text-decoration:none;">contact us</a>.<br>
-        You’re receiving this because you booked at Beauty by Sophieee. <span style="color:#9b9b9b;">&copy; Beauty by Sophieee {{year}}</span>
+        If you didn’t make this booking or need help, please <a href="{{contact_url}}" style="color:#b56b9b;text-decoration:none;">contact us</a>.<br>
+        You’re receiving this because you booked at Beauty by Sophieee. <span style="color:#9b9b9b;">© Beauty by Sophieee 2025</span>
       </div>
 
     </div>
