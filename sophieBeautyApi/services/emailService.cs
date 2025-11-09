@@ -20,44 +20,69 @@ namespace sophieBeautyApi.services
             _config = config;
         }
 
-        public async Task send(booking newBooking)
+        public async Task Send(booking newBooking)
         {
+            try
+            {
+                using (SmtpClient client = new SmtpClient("smtppro.zoho.eu", 587))
+                {
+                    client.EnableSsl = true;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential(
+                        _config["emailUsername"],
+                        _config["emailAppPassword"]
+                    );
 
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-            client.EnableSsl = true;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(_config["emailUsername"], _config["emailAppPassword"]);
+                    using (MailMessage message = new MailMessage())
+                    {
+                        message.To.Add(newBooking.email);
+                        message.From = new MailAddress(_config["emailUsername"]);
+                        message.Subject = "Booking Confirmation";
+                        message.IsBodyHtml = true;
 
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "BookingConfirmation.html");
+                        string htmlBody = File.ReadAllText(filePath);
 
-            MailMessage message = new MailMessage();
-            message.To.Add(newBooking.email);
-            message.From = new MailAddress(_config["emailUsername"]);
-            message.Subject = "Booking Confirmation";
-            message.IsBodyHtml = true;
+                        var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+                        var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
+                        string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "BookingConfirmation.html");
-            string htmlBody = File.ReadAllText(filePath);
-            
+                        htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+                        htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
+                        htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
+                        htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+                        htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+                        htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
+                        htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-            var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
-            var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
-            string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
+                        message.Body = htmlBody;
 
+                        await client.SendMailAsync(message);
+                    }
+                }
 
-            htmlBody=htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-            htmlBody=htmlBody.Replace("{{service_name}}", newBooking.treatmentName);
-            htmlBody=htmlBody.Replace("{{start_datetime}}", formattedDate);
-            htmlBody=htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
-            htmlBody=htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
-            htmlBody=htmlBody.Replace("{{payment_method}}", "Cash");
-            htmlBody=htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
-
-            message.Body = htmlBody.ToString();
-            
-            await client.SendMailAsync(message);
-
-
+            }
+            catch (SmtpException smtpEx)
+            {
+                // SMTP-specific errors (authentication, connection issues)
+                Console.WriteLine("SMTP Error: " + smtpEx.Message);
+                if (smtpEx.InnerException != null)
+                    Console.WriteLine("Inner Exception: " + smtpEx.InnerException.Message);
+            }
+            catch (IOException ioEx)
+            {
+                // File reading errors
+                Console.WriteLine("IO Error reading HTML template: " + ioEx.Message);
+            }
+            catch (Exception ex)
+            {
+                // General errors
+                Console.WriteLine("Unexpected error sending email: " + ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("Inner Exception: " + ex.InnerException.Message);
+            }
         }
+
 
 
     }
