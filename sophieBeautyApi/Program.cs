@@ -92,7 +92,8 @@ using Microsoft.Extensions.Configuration;
                     "http://localhost:000",
                     "http://127.0.0.1:5500",
                     "http://192.168.1.71:5500",
-                    "https://beautybysophieee.netlify.app")
+                    "https://beautybysophieee.netlify.app",
+                    "https://beautybysophieee.com" )
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials());
