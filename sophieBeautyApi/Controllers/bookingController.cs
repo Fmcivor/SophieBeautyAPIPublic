@@ -57,7 +57,20 @@ namespace sophieBeautyApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var treatment = await _treatmentService.getById(newBooking.treatmentId);
+            var treatments = await _treatmentService.getListByIds(newBooking.treatmentIds);
+
+            List<string> treatmentNames = new List<string>();
+            int duration = 0;
+            int price = 0;
+
+            foreach (var t in treatments)
+            {
+                treatmentNames.Add(t.name);
+                duration += t.duration;
+                price += t.price;
+            }
+
+            duration = (int)(Math.Ceiling(duration / 30.0) * 30);
 
             bool paid = false;
             if (newBooking.payByCard)
@@ -65,7 +78,7 @@ namespace sophieBeautyApi.Controllers
                 paid = true;
             }
 
-            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatment.name, (int)treatment.price, treatment.duration, newBooking.payByCard, paid, booking.status.Confirmed);
+            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatmentNames, price,duration, newBooking.payByCard, paid, booking.status.Confirmed);
 
             var existingBooking = await _bookingService.bookingOnDate(booking.appointmentDate);
 
@@ -93,46 +106,46 @@ namespace sophieBeautyApi.Controllers
 
             booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
 
-            _emailService.Send(booking);
+            await _emailService.Send(booking);
 
             return CreatedAtAction(nameof(create), booking);
         }
 
 
-        [Authorize]
-        [HttpPost("specialCreate")]
-        public async Task<ActionResult> specialCreate([FromBody] newBookingDTO newBooking)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        // [Authorize]
+        // [HttpPost("specialCreate")]
+        // public async Task<ActionResult> specialCreate([FromBody] newBookingDTO newBooking)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
 
-            var treatment = await _treatmentService.getById(newBooking.treatmentId);
+        //     var treatment = await _treatmentService.getById(newBooking.treatmentId);
 
-            bool paid = false;
-            if (newBooking.payByCard)
-            {
-                paid = true;
-            }
+        //     bool paid = false;
+        //     if (newBooking.payByCard)
+        //     {
+        //         paid = true;
+        //     }
 
-            booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatment.name, (int)treatment.price, treatment.duration, newBooking.payByCard, paid, booking.status.Confirmed);
+        //     booking booking = new booking(newBooking.customerName, newBooking.appointmentDate, newBooking.email, treatment.name, (int)treatment.price, treatment.duration, newBooking.payByCard, paid, booking.status.Confirmed);
 
-            var existingBooking = await _bookingService.bookingOnDate(booking.appointmentDate);
+        //     var existingBooking = await _bookingService.bookingOnDate(booking.appointmentDate);
 
-            if (existingBooking != null)
-            {
-                return BadRequest("TAKEN,Sorry the booking slot has already been taken");
-            }
+        //     if (existingBooking != null)
+        //     {
+        //         return BadRequest("TAKEN,Sorry the booking slot has already been taken");
+        //     }
 
-            booking = await _bookingService.create(booking);
+        //     booking = await _bookingService.create(booking);
 
-            var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+        //     var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
 
-            booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
+        //     booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
 
-            return CreatedAtAction(nameof(create), booking);
-        }
+        //     return CreatedAtAction(nameof(create), booking);
+        // }
 
 
 

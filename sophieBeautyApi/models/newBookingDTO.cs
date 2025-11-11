@@ -18,9 +18,8 @@ namespace sophieBeautyApi.Models
         public DateTime appointmentDate {get; set; }
 
         [Required]
-        [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string treatmentId { get; set; }
+        public List<string> treatmentIds { get; set; }
 
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$",ErrorMessage ="Email not of valid format.")]
