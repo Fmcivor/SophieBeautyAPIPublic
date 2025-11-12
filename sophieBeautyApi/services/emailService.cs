@@ -26,34 +26,38 @@ namespace sophieBeautyApi.services
             try
             {
                 var client = new EmailClient(_config["AzureEmailConnString"]);
-                    
 
-                    
-                        
 
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "BookingConfirmation.html");
-                        string htmlBody = File.ReadAllText(filePath);
 
-                        var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
-                        var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
-                        string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
-                        htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-                        // htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentNames);
-                        htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
-                        htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
-                        htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
-                        htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
-                        htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-                var message = new EmailMessage(_config["AzureEmailConnString"],newBooking.email,new EmailContent("Booking Success")
-                {
-                    Html = htmlBody
-                });
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "BookingConfirmation.html");
+                string htmlBody = File.ReadAllText(filePath);
 
-                var result =  await client.SendAsync(Azure.WaitUntil.Completed, message);
-                    
-                
+                var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+                var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
+                string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
+
+                htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+                // htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentNames);
+                htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
+                htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+                htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+                htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
+                htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
+
+                var message = new EmailMessage(
+                    senderAddress: _config["fromEmail"],
+                    recipientAddress: newBooking.email,
+                    new EmailContent("Booking Confirmation")
+                    {
+                        Html = htmlBody
+                    }
+                );
+
+                var result = await client.SendAsync(Azure.WaitUntil.Completed, message);
+
+
 
             }
             catch (Exception ex)
