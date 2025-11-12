@@ -39,8 +39,15 @@ namespace sophieBeautyApi.services
                 var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
                 string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
+                string treatmentHtml = "";
+
+                foreach (var treatment in newBooking.treatmentNames)
+                {
+                    treatmentHtml += "<p>" + treatment + "</p>";
+                }
+
                 htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-                // htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentNames);
+                htmlBody = htmlBody.Replace("{{service_name}}", treatmentHtml);
                 htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
                 htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
                 htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
@@ -52,7 +59,7 @@ namespace sophieBeautyApi.services
                     content: new EmailContent("Booking Confirmation")
                     {
                         PlainText = @"Your booking at beauty by sophieee was successful",
-                        Html = "<h1>Your booking is confirmed</h1><p>See details below</p>"
+                        Html = htmlBody
                     },
                     recipients: new EmailRecipients(new List<EmailAddress>
                     {
@@ -61,7 +68,7 @@ namespace sophieBeautyApi.services
 
 
                 EmailSendOperation emailSendOperation = client.Send(
-                    WaitUntil.Completed,
+                    WaitUntil.Started,
                     emailMessage);
 
 
