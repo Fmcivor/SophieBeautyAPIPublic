@@ -49,5 +49,15 @@ namespace sophieBeautyApi.services
             var result = await treatmentTable.DeleteOneAsync(filter);
             return result.DeletedCount > 0;
         }
+    
+        public async Task<IEnumerable<treatment>> getListByIds(List<string> ids)
+        {
+
+            var treatments = await treatmentTable.Find(t => ids.Contains(t.Id) == true).ToListAsync();
+
+
+            return treatments;
+        }
+    
     }
 }

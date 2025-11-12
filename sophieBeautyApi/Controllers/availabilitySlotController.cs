@@ -114,7 +114,7 @@ namespace sophieBeautyApi.Controllers
 
             var localZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
 
-            
+
 
 
             foreach (availablilitySlot slot in slots)
@@ -129,11 +129,11 @@ namespace sophieBeautyApi.Controllers
                         bookingDuration = bookingsOnDate.FirstOrDefault(b => TimeZoneInfo.ConvertTimeFromUtc(b.appointmentDate, localZone).TimeOfDay == i).duration;
                         if (bookingDuration > 60)
                         {
-                            i +=TimeSpan.FromMinutes(bookingDuration-60);
+                            i += TimeSpan.FromMinutes(bookingDuration - 60);
                         }
                     }
 
-                    
+
 
                     if (!slotTaken)
                     {
@@ -156,6 +156,54 @@ namespace sophieBeautyApi.Controllers
 
             return NotFound();
         }
+
+
+
+        [HttpPost("TestavailableTimes")]
+        public async Task<ActionResult<IEnumerable<TimeSpan>>> testGetTimes([FromBody] availableTimesRequest request)
+        {
+
+            var slots = await _availabilitySlotService.getSlotsByDate(request.date);
+
+            var allTimes = new List<TimeSpan>();
+
+            var bookingsOnDate = await _bookingService.bookingsByDate(request.date);
+
+            var localZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+
+            // check all availability slots
+            foreach (availablilitySlot slot in slots)
+            {
+                for (TimeSpan i = slot.startTime; i <= slot.endTime; i = i.Add(TimeSpan.FromHours(0.5)))
+                {
+                    bool slotTaken = bookingsOnDate.Any(b =>
+                    {
+                        TimeSpan slotStart = i;
+                        TimeSpan slotEnd = i.Add(TimeSpan.FromMinutes(request.bookingDuration));
+                        TimeSpan existingStart = TimeZoneInfo.ConvertTimeFromUtc(b.appointmentDate, localZone).TimeOfDay;
+                        TimeSpan existingEnd = existingStart.Add(TimeSpan.FromMinutes(b.duration));
+
+                        if (slotStart < existingEnd && slotEnd > existingStart)
+                        {
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    if (!slotTaken)
+                    {
+                        allTimes.Add(i);
+                    }
+                }
+            }
+
+            return Ok(allTimes);
+        }
+
+
+
+
+
 
     }
 }

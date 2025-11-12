@@ -26,7 +26,7 @@ namespace sophieBeautyApi.Models
 
 
         [Required]
-        public string treatmentName { get; set; }
+        public List<string> treatmentNames { get; set; }
 
         [Required]
         public int duration {get; set;}
@@ -58,7 +58,7 @@ namespace sophieBeautyApi.Models
             string customerName,
             DateTime appointmentDate,
             string email,
-            string treatmentName,
+            List<string> treatmentNames,
             int cost,
             int duration,
             bool payByCard,
@@ -69,7 +69,7 @@ namespace sophieBeautyApi.Models
             this.customerName = customerName;
             this.appointmentDate = appointmentDate;
             this.email = email;
-            this.treatmentName = treatmentName;
+            this.treatmentNames = treatmentNames;
             this.cost = cost;
             this.duration = duration;
             this.payByCard = payByCard;
