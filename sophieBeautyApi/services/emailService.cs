@@ -43,7 +43,7 @@ namespace sophieBeautyApi.services
 
                 foreach (var treatment in newBooking.treatmentNames)
                 {
-                    treatmentHtml += "<p>" + treatment + "</p>";
+                    treatmentHtml += "<div>" + treatment + "</div>";
                 }
 
                 htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
