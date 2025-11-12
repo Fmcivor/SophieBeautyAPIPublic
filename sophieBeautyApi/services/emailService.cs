@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using Azure;
 using Azure.Communication.Email;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -46,25 +47,22 @@ namespace sophieBeautyApi.services
                 htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
                 htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
-
-                var recipients = new EmailRecipients(new[] { new EmailAddress(newBooking.email) });
-
-
-                var content = new EmailContent("Booking Confirmation")
-                {
-                    Html = htmlBody,
-                    PlainText = $"Hi {newBooking.customerName}, your booking on {formattedDate} is confirmed."
-                };
-
-                var message = new EmailMessage(
-                    senderAddress: _config["fromEmail"],  // verified sender
-                    recipients: recipients,
-                    content: content
-                );
+                var emailMessage = new EmailMessage(
+                    senderAddress: "DoNotReply@beautybysophieee.com",
+                    content: new EmailContent("Booking Confirmation")
+                    {
+                        PlainText = @"Your booking at beauty by sophieee was successful",
+                        Html = htmlBody
+                    },
+                    recipients: new EmailRecipients(new List<EmailAddress>
+                    {
+                        new EmailAddress(newBooking.email)
+                    }));
 
 
-                var result = await client.SendAsync(Azure.WaitUntil.Completed, message);
-
+                EmailSendOperation emailSendOperation = client.Send(
+                    WaitUntil.Completed,
+                    emailMessage);
 
 
             }
