@@ -32,20 +32,20 @@ namespace sophieBeautyApi.services
 
 
 
-                // var filePath = Path.Combine(Directory.GetCurrentDirectory(), "BookingConfirmation.html");
-                // string htmlBody = File.ReadAllText(filePath);
+                var filePath = Path.Combine(AppContext.BaseDirectory, "BookingConfirmation.html");
+                string htmlBody = File.ReadAllText(filePath);
 
                 var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
                 var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
                 string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
 
-                // htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
-                // // htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentNames);
-                // htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
-                // htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
-                // htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
-                // htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
-                // htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
+                htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+                // htmlBody = htmlBody.Replace("{{service_name}}", newBooking.treatmentNames);
+                htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
+                htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+                htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+                htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
+                htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
                 var emailMessage = new EmailMessage(
                     senderAddress: "DoNotReply@beautybysophieee.com",
