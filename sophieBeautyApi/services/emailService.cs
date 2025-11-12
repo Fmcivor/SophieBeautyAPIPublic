@@ -46,14 +46,22 @@ namespace sophieBeautyApi.services
                 htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
                 htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
 
+
+                var recipients = new EmailRecipients(new[] { new EmailAddress(newBooking.email) });
+
+
+                var content = new EmailContent("Booking Confirmation")
+                {
+                    Html = htmlBody,
+                    PlainText = $"Hi {newBooking.customerName}, your booking on {formattedDate} is confirmed."
+                };
+
                 var message = new EmailMessage(
-                    senderAddress: _config["fromEmail"],
-                    recipientAddress: newBooking.email,
-                    new EmailContent("Booking Confirmation")
-                    {
-                        Html = htmlBody
-                    }
+                    senderAddress: _config["fromEmail"],  // verified sender
+                    recipients: recipients,
+                    content: content
                 );
+
 
                 var result = await client.SendAsync(Azure.WaitUntil.Completed, message);
 
