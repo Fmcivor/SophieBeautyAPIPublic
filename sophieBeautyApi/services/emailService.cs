@@ -58,7 +58,7 @@ namespace sophieBeautyApi.services
                     senderAddress: "DoNotReply@shapedbysophiee.com",
                     content: new EmailContent("Booking Confirmation")
                     {
-                        PlainText = @"Your booking at beauty by sophieee was successful",
+                        PlainText = @"Your booking at shaped by sophiee was successful",
                         Html = htmlBody
                     },
                     recipients: new EmailRecipients(new List<EmailAddress>
