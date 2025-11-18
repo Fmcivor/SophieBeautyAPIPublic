@@ -22,7 +22,7 @@ namespace sophieBeautyApi.services
             _config = config;
         }
 
-        public async Task SendConfirmation(booking newBooking)
+        public async Task Send(booking newBooking)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace sophieBeautyApi.services
 
 
 
-                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructures/BookingConfirmation.html");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "BookingConfirmation.html");
                 string htmlBody = File.ReadAllText(filePath);
 
                 var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
@@ -79,16 +79,16 @@ namespace sophieBeautyApi.services
                 if (ex.InnerException != null)
                     Console.WriteLine(ex.InnerException.Message);
             }
-        
         }
 
+
         public async Task sendCancellation(booking cancelledBooking)
-        { 
+        {
             try
             {
                 var client = new EmailClient(_config["AzureEmailConnString"]);
 
-                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructures/bookingCancelled.html");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "bookingCancelled.html");
                 string htmlBody = File.ReadAllText(filePath);
 
                 var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
@@ -135,7 +135,7 @@ namespace sophieBeautyApi.services
                 if (ex.InnerException != null)
                     Console.WriteLine(ex.InnerException.Message);
             }
-        
+
         }
 
     }
