@@ -43,7 +43,7 @@ namespace sophieBeautyApi.services
 
                 foreach (var treatment in newBooking.treatmentNames)
                 {
-                    treatmentHtml += "<p>" + treatment + "</p>";
+                    treatmentHtml += "<div>" + treatment + "</div>";
                 }
 
                 htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
@@ -52,10 +52,10 @@ namespace sophieBeautyApi.services
                 htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
                 htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
                 htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
-                htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + _config["emailUsername"]);
+                htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + "info@beautybysophieee.com");
 
                 var emailMessage = new EmailMessage(
-                    senderAddress: "DoNotReply@beautybysophieee.com",
+                    senderAddress: "DoNotReply@shapedbysophiee.com",
                     content: new EmailContent("Booking Confirmation")
                     {
                         PlainText = @"Your booking at beauty by sophieee was successful",
