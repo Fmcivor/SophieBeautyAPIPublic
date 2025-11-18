@@ -106,7 +106,7 @@ namespace sophieBeautyApi.Controllers
 
             booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
 
-            await _emailService.SendConfirmation(booking);
+            await _emailService.Send(booking);
 
             return CreatedAtAction(nameof(create), booking);
         }
