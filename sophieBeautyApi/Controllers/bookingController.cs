@@ -106,7 +106,7 @@ namespace sophieBeautyApi.Controllers
 
             booking.appointmentDate = TimeZoneInfo.ConvertTimeFromUtc(booking.appointmentDate, ukZone);
 
-            await _emailService.Send(booking);
+            await _emailService.SendConfirmation(booking);
 
             return CreatedAtAction(nameof(create), booking);
         }
@@ -183,6 +183,7 @@ namespace sophieBeautyApi.Controllers
                 return BadRequest("Id is required.");
             }
 
+            var cancelledBooking = await _bookingService.getById(id);
             bool succeeded = await _bookingService.delete(id);
 
             if (!succeeded)
@@ -190,6 +191,7 @@ namespace sophieBeautyApi.Controllers
                 return NotFound();
             }
 
+            await _emailService.sendCancellation(cancelledBooking);
             return NoContent();
         }
 
