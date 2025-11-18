@@ -32,7 +32,7 @@ namespace sophieBeautyApi.services
 
 
 
-                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructure/BookingConfirmation.html");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructures/BookingConfirmation.html");
                 string htmlBody = File.ReadAllText(filePath);
 
                 var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
@@ -88,7 +88,7 @@ namespace sophieBeautyApi.services
             {
                 var client = new EmailClient(_config["AzureEmailConnString"]);
 
-                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructure/bookingCancelled.html");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "EmailStructures/bookingCancelled.html");
                 string htmlBody = File.ReadAllText(filePath);
 
                 var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
