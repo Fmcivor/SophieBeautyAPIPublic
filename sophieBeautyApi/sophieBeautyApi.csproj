@@ -16,11 +16,15 @@
     <PackageReference Include="Azure.Identity" Version="1.*" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.*" />
   </ItemGroup>
+  
+<ItemGroup>
+  <None Update="BookingConfirmation.html">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+  <None Update="bookingCancelled.html">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
 
-  <ItemGroup>
-    <None Update="BookingConfirmation.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
 </Project>
