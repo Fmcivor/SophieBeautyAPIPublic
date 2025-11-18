@@ -56,7 +56,7 @@ namespace sophieBeautyApi.services
 
                 var emailMessage = new EmailMessage(
                     senderAddress: "DoNotReply@shapedbysophiee.com",
-                    content: new EmailContent("Booking Confirmation")
+                    content: new EmailContent("Booking Confirmation - "+newBooking.customerName+" - "+formattedDate)
                     {
                         PlainText = @"Your booking at shaped by sophiee was successful",
                         Html = htmlBody
@@ -112,7 +112,7 @@ namespace sophieBeautyApi.services
 
                 var emailMessage = new EmailMessage(
                     senderAddress: "DoNotReply@shapedbysophiee.com",
-                    content: new EmailContent("Booking Confirmation")
+                    content: new EmailContent("Booking Cancellation - "+cancelledBooking.customerName+" - "+formattedDate)
                     {
                         PlainText = @"Your booking at shaped by sophiee was successful",
                         Html = htmlBody
