@@ -25,5 +25,10 @@ namespace sophieBeautyApi.Models
         [Required]
         public string type { get; set; }
 
+        [Required]
+        [MinLength(20)]
+        [MaxLength(50)]
+        public string description {get; set; }
+
     }
 }
