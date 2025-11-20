@@ -64,7 +64,7 @@ namespace sophieBeautyApi.services
 
 
                 EmailSendOperation emailSendOperation = client.Send(
-                    WaitUntil.Started,
+                    WaitUntil.Completed,
                     emailMessage);
 
                 await notifyNewBooking(newBooking);
@@ -167,14 +167,14 @@ namespace sophieBeautyApi.services
 
                 var emailMessage = new EmailMessage(
                     senderAddress: "DoNotReply@shapedbysophiee.com",
-                    content: new EmailContent("Booking Confirmation - "+newBooking.customerName+" - "+formattedDate)
+                    content: new EmailContent("New Booking - "+newBooking.customerName+" - "+formattedDate)
                     {
-                        PlainText = @"Your booking at shaped by sophiee was successful",
+                        PlainText = @"New Booking made by "+newBooking.customerName,
                         Html = htmlBody
                     },
                     recipients: new EmailRecipients(new List<EmailAddress>
                     {
-                        new EmailAddress(newBooking.email)
+                        new EmailAddress("info@beautybysophieee.com")
                     }));
 
 
