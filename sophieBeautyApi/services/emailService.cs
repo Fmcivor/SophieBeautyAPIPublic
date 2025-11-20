@@ -174,7 +174,7 @@ namespace sophieBeautyApi.services
                     },
                     recipients: new EmailRecipients(new List<EmailAddress>
                     {
-                        new EmailAddress("info@beautybysophieee.com")
+                        new EmailAddress("beautybysophieeelimavady@gmail.com")
                     }));
 
 
