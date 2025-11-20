@@ -24,6 +24,9 @@
   <None Update="bookingCancelled.html">
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
   </None>
+  <None Update="bookingNotification.html">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
 </ItemGroup>
 
 

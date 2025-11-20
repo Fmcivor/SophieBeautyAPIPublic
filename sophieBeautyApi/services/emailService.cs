@@ -28,10 +28,6 @@ namespace sophieBeautyApi.services
             {
                 var client = new EmailClient(_config["AzureEmailConnString"]);
 
-
-
-
-
                 var filePath = Path.Combine(AppContext.BaseDirectory, "BookingConfirmation.html");
                 string htmlBody = File.ReadAllText(filePath);
 
@@ -70,6 +66,8 @@ namespace sophieBeautyApi.services
                 EmailSendOperation emailSendOperation = client.Send(
                     WaitUntil.Started,
                     emailMessage);
+
+                await notifyNewBooking(newBooking);
 
 
             }
@@ -136,6 +134,62 @@ namespace sophieBeautyApi.services
                     Console.WriteLine(ex.InnerException.Message);
             }
 
+        }
+
+
+        public async Task notifyNewBooking(booking newBooking)
+        {
+            try
+            {
+                var client = new EmailClient(_config["AzureEmailConnString"]);
+
+                var filePath = Path.Combine(AppContext.BaseDirectory, "bookingNotification.html");
+                string htmlBody = File.ReadAllText(filePath);
+
+                var ukZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+                var treatmentTime = TimeZoneInfo.ConvertTimeFromUtc(newBooking.appointmentDate, ukZone);
+                string formattedDate = treatmentTime.ToString("dd/MM/yyyy HH:mm");
+
+                string treatmentHtml = "";
+
+                foreach (var treatment in newBooking.treatmentNames)
+                {
+                    treatmentHtml += "<div>" + treatment + "</div>";
+                }
+
+                htmlBody = htmlBody.Replace("{{customer_name}}", newBooking.customerName);
+                htmlBody = htmlBody.Replace("{{service_name}}", treatmentHtml);
+                htmlBody = htmlBody.Replace("{{start_datetime}}", formattedDate);
+                htmlBody = htmlBody.Replace("{{price}}", "£" + newBooking.cost.ToString());
+                htmlBody = htmlBody.Replace("{{duration}}", newBooking.duration.ToString() + " Minutes");
+                htmlBody = htmlBody.Replace("{{payment_method}}", "Cash");
+                htmlBody = htmlBody.Replace("{{contact_url}}", "mailto:" + "info@beautybysophieee.com");
+
+                var emailMessage = new EmailMessage(
+                    senderAddress: "DoNotReply@shapedbysophiee.com",
+                    content: new EmailContent("Booking Confirmation - "+newBooking.customerName+" - "+formattedDate)
+                    {
+                        PlainText = @"Your booking at shaped by sophiee was successful",
+                        Html = htmlBody
+                    },
+                    recipients: new EmailRecipients(new List<EmailAddress>
+                    {
+                        new EmailAddress("info@beautybysophieee.com")
+                    }));
+
+
+                EmailSendOperation emailSendOperation = client.Send(
+                    WaitUntil.Started,
+                    emailMessage);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Azure Email Error: " + ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine(ex.InnerException.Message);
+            }
         }
 
     }
