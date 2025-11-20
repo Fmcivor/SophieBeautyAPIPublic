@@ -64,7 +64,7 @@ namespace sophieBeautyApi.services
 
 
                 EmailSendOperation emailSendOperation = client.Send(
-                    WaitUntil.Completed,
+                    WaitUntil.Started,
                     emailMessage);
 
                 await notifyNewBooking(newBooking);
@@ -174,7 +174,7 @@ namespace sophieBeautyApi.services
                     },
                     recipients: new EmailRecipients(new List<EmailAddress>
                     {
-                        new EmailAddress("beautybysophieeelimavady@gmail.com")
+                        new EmailAddress("info@beautybysophieee.com")
                     }));
 
 
